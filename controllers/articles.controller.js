@@ -19,7 +19,6 @@ exports.patchArticle = (req, res, next) => {
 
     updateArticle(article_id, inc_votes)
     .then((result) => {
-        console.log(result, ' << result');
         res.status(201).send(result)
     })
 }
