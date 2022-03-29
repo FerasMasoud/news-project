@@ -61,6 +61,28 @@ describe('GET /api/topics', () => {
     })
 })
 
+describe.only('PATCH  /api/articles/:article_id', () => { 
+    test('patch the votes property in the database and increment by a number', () => {
+        return request(app)
+        .patch('/api/articles/5')
+        .send({ inc_votes: 2 })
+        .expect(201)
+        .then((result) => {
+            expect(result.body.article_id).toBe(5);
+            expect(result.body).toMatchObject({
+                author: 'rogersop',
+                title: 'UNCOVERED: catspiracy to bring down democracy',
+                article_id: 5,
+                body: 'Bastet walks amongst us, and the cats are taking arms!',
+                topic: 'cats',
+                created_at: '2020-08-03T13:14:00.000Z',
+                votes: 2
+            });
+        });
+    })
+})
+
+
 
 
 
