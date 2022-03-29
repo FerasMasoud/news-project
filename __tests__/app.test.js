@@ -61,7 +61,7 @@ describe('GET /api/topics', () => {
     })
 })
 
-describe.only('PATCH  /api/articles/:article_id', () => { 
+describe('PATCH  /api/articles/:article_id', () => { 
     test('patch the votes property in the database and increment by a number', () => {
         return request(app)
         .patch('/api/articles/5')
@@ -80,6 +80,29 @@ describe.only('PATCH  /api/articles/:article_id', () => {
             });
         });
     })
+})
+
+describe.only('GET /api/articles', () => { 
+    test('return an articles array of article object', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((result) => {
+            expect(result.body).toBeInstanceOf(Array);
+            result.body.forEach((element) => {
+                expect(element).toMatchObject({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    comment_count: expect.any(String),
+                    //body: 'Bastet walks amongst us, and the cats are taking arms!',
+                });
+            })  
+        });
+    });
 })
 
 
