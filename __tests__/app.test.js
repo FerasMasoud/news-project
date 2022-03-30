@@ -26,7 +26,7 @@ describe('GET /api/articles/:article_id', () => {
             });
         });
     });
-    test('REFACTORED: return an article object by id and + comment_count ', () => {
+    test('return an article object by id and + comment_count ', () => {
         return request(app)
         .get('/api/articles/5')
         .expect(200)
@@ -130,7 +130,44 @@ describe('GET /api/articles', () => {
             }); 
         });
     })
+    //add test wrong endpoin
+    test('return 404 when endpoint is not correct' , () => {
+        return request(app)
+        .get('/api/arltsd')
+        .expect(404)
+        .then((result) => {
+            expect(result.body.msg).toBe('path not found!!')
+        })
+    })
 })
+
+describe('GET /api/users', () => { 
+    test('return an array of objects each having userName property', () => {
+        return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then((result) => {
+            expect(result.body).toBeInstanceOf(Array);
+            result.body.forEach((element) => {
+                expect(element).toEqual({
+                    username: expect.any(String)
+                });
+            });
+        });
+    })
+    test('return 404 when endpoint is not correct' , () => {
+        return request(app)
+        .get('/api/usetasds')
+        .expect(404)
+        .then((result) => {
+            expect(result.body.msg).toBe('path not found!!')
+        })
+    })
+    
+})
+
+
+
 
 
 
