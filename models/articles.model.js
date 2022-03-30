@@ -58,7 +58,6 @@ exports.selectArticles = () => {
 
     return db.query(query)
     .then((result) => {
-        console.log(result.rows);
         return result.rows;
     })
 }
