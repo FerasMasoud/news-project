@@ -166,6 +166,35 @@ describe('GET /api/users', () => {
     
 })
 
+describe('GET /api/articles/:article_id/comments', () => {
+    test('return an array of objects each having userName property', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((result) => {
+            expect(result.body).toBeInstanceOf(Array);
+            result.body.forEach((element) => {
+                expect(element).toEqual({
+                    article_id: 1,
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String)
+                });
+            });
+        });
+    })
+    test("return 404 when article doesn't exist", () => {
+        return request(app)
+        .get('/api/articles/999/comments')
+        .expect(404)
+        .then((result) => {
+            expect(result.body.msg).toBe('no articles found!');
+        })
+    })
+})
+
 
 
 
