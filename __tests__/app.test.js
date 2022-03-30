@@ -13,7 +13,6 @@ describe('GET /api/articles/:article_id', () => {
         .get('/api/articles/5')
         .expect(200)
         .then((result) => {
-            console.log(result.body ,' << body');
             expect(result.body).toBeInstanceOf(Object);
             expect(result.body.article_id).toBe(5);
             expect(result.body).toMatchObject({
@@ -87,7 +86,6 @@ describe('PATCH  /api/articles/:article_id', () => {
         .patch('/api/articles/1000')
         .expect(400)
         .then((result) => {
-            console.log(result.body.msg);
             expect(result.body.msg).toBe("bad request!");
         })
     })
