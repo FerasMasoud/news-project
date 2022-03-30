@@ -21,6 +21,8 @@ exports.patchArticle = (req, res, next) => {
     .then((result) => {
         res.status(201).send(result)
     })
+    .catch(next);
+    
 }
 
 exports.getArticles = (req, res, next) => {
