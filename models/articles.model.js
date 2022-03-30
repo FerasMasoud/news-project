@@ -2,7 +2,7 @@ const db = require('../db/connection');
 
 
 exports.selectArticleById = (article_id) => {
-
+    
     let newQuery = `
     SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.body, 
     articles.created_at, articles.votes, COUNT(comments.article_id) AS comment_count
@@ -40,9 +40,13 @@ exports.updateArticle = (article_id, newVote) => {
 
     //the return of the query
     return db.query(patchVotesQuery, [newVote, article_id])
-    .then((result) => {    
+    .then((result) => {   
+        if(result.rows.length === 0) {
+            return Promise.reject({status: 400, msg: "bad request!"});
+        } 
         return result.rows[0];
     }
+
 )}
 
 exports.selectArticles = () => {
@@ -56,7 +60,9 @@ exports.selectArticles = () => {
         ON articles.article_id = comments.article_id
 
         GROUP BY articles.author, articles.title, articles.article_id, articles.topic,
-        articles.created_at, articles.votes;
+        articles.created_at, articles.votes
+
+        ORDER BY articles.created_at Desc;
     `;
 
     return db.query(query)

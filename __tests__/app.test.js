@@ -22,7 +22,7 @@ describe('GET /api/articles/:article_id', () => {
                 body: 'Bastet walks amongst us, and the cats are taking arms!',
                 topic: 'cats',
                 created_at: '2020-08-03T13:14:00.000Z',
-                votes: 0
+                votes: 0,
             });
         });
     });
@@ -99,10 +99,19 @@ describe('PATCH  /api/articles/:article_id', () => {
             });
         });
     })
+    //add test where the id doesn't exist 
+    test('return 400 bad request when article id is not found', () => {
+        return request(app)
+        .patch('/api/articles/1000')
+        .expect(400)
+        .then((result) => {
+            expect(result.body.msg).toBe("bad request!");
+        })
+    })
 })
 
 describe('GET /api/articles', () => { 
-    test('return an articles array of article object', () => {
+    test('return an articles array of article objects with custom columns and sorted by date in descending order', () => {
         return request(app)
         .get('/api/articles')
         .expect(200)
@@ -117,11 +126,10 @@ describe('GET /api/articles', () => {
                     created_at: expect.any(String),
                     votes: expect.any(Number),
                     comment_count: expect.any(String),
-                    //body: 'Bastet walks amongst us, and the cats are taking arms!',
                 });
-            })  
+            }); 
         });
-    });
+    })
 })
 
 
