@@ -1,10 +1,10 @@
 const { resetWatchers } = require('nodemon/lib/monitor/watch');
-const { selectArticle, updateArticle } = require('../models/articles.model');
+const { selectArticleById, updateArticle, selectArticles} = require('../models/articles.model');
 
-exports.getArticle = (req, res, next) => {
+exports.getArticleById = (req, res, next) => {
     const { article_id}  = req.params;
    
-    selectArticle(article_id)
+    selectArticleById(article_id)
     .then((data) => {
         res.send(data);
     })
@@ -20,5 +20,14 @@ exports.patchArticle = (req, res, next) => {
     updateArticle(article_id, inc_votes)
     .then((result) => {
         res.status(201).send(result)
+    })
+    .catch(next);
+    
+}
+
+exports.getArticles = (req, res, next) => {
+    selectArticles()
+    .then((data) => {
+        res.send(data);
     })
 }
