@@ -112,9 +112,9 @@ describe('PATCH  /api/articles/:article_id', () => {
 })
 
 describe('GET /api/articles', () => { 
-    test('return an articles array of article objects with custom columns and sorted by date in descending order', () => {
+    test('return an articles array of article objects with custom columns', () => {
         return request(app)
-        .get('/api/articles')
+        .get('/api/articles?sort_by=created_at')
         .expect(200)
         .then((result) => {
             expect(result.body).toBeInstanceOf(Array);
@@ -130,8 +130,28 @@ describe('GET /api/articles', () => {
                 });
             }); 
         });
+    }) 
+    test('articles should be sorted_by date and in descending order', () => {
+        return request(app)
+        .get(`/api/articles?sort_by=created_at`)
+        .expect(200)
+        .then((results) => {
+            expect(results.body).toBeSortedBy('created_at', {                       
+                descending: true
+            });
+        })
     })
-    //add test wrong endpoin
+    test('sort by valid topic query', () => {
+        return request(app)
+        .get(`/api/articles?topic=mitch`)
+        .expect(200)
+        .then((results) => {
+            expect(results.body).toBeSortedBy('topic', {
+                descending: true
+            });
+        })
+    })
+    
     test('return 404 when endpoint is not correct' , () => {
         return request(app)
         .get('/api/arltsd')
@@ -140,6 +160,31 @@ describe('GET /api/articles', () => {
             expect(result.body.msg).toBe('path not found!!')
         })
     })
+    test('return 400 when queries are not valid', () => {
+        return request(app)
+        .get('/api/articles?order=daskdjl')
+        .expect(400)
+        .then((result) => {
+            expect(result.body.msg).toBe("Invalid order query");
+        })
+    })
+    test('return 400 when queries are not valid', () => {
+        return request(app)
+        .get('/api/articles?sort_by=daskdjl')
+        .expect(400)
+        .then((result) => {
+            expect(result.body.msg).toBe("Invalid sort query");
+        })
+    })
+    test('return 404 when sort topic is not valid', () => {
+        return request(app)
+        .get(`/api/articles?topic=dasd`)
+        .expect(404)
+        .then((results) => {
+            expect(results.body.msg).toBe("Invalid topic");
+        })
+    })
+    
 })
 
 describe('GET /api/users', () => { 
