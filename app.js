@@ -2,7 +2,7 @@ const express = require('express');
 const { getTopics } = require('./controllers/topics.controller');
 const { getArticleById, patchArticle, getArticles } = require('./controllers/articles.controller');
 const { getUsers } = require('./controllers/users.controller');
-const { getCommentsFromArticle } = require('./controllers/comments.controller');
+const { getCommentsFromArticle, postComment } = require('./controllers/comments.controller');
 
 
 
@@ -15,6 +15,7 @@ app.patch('/api/articles/:article_id', patchArticle);
 app.get('/api/articles', getArticles);
 app.get('/api/users', getUsers);
 app.get('/api/articles/:article_id/comments', getCommentsFromArticle )
+app.post('/api/articles/:article_id/comments', postComment)
 
 //psql errors
 app.use((err, req, res, next) => {

@@ -3,25 +3,49 @@ const { selectArticles } = require('../models/articles.model');
 
 exports.selectCommentsFromArticle = (article_id) => {
     
-    const articlesCount = [];
-
-    //selectArticles to get the length of the articles
-    selectArticles().then((data) => {
-        articlesCount.push(data.length);
+    // push all exisiting article ids to an array
+    const existingArticles = [];
+    selectArticles().then((result) => {
+        for(let i = 0; i < result.length; i++) {
+            existingArticles.push(result[i].article_id);
+        }
     });
 
     let query = `
         SELECT * FROM comments
-        WHERE article_id = $1;   
+        WHERE article_id = $1; 
+    `;
+ 
+    return db.query(query, [article_id])
+        .then((result) => {  
+        //if article_id doesn't exisit in the db reject the request
+        if(!existingArticles.includes(parseInt(article_id))) {
+            return Promise.reject({status: 404, msg: 'no comments found!'});
+        } 
+        else {
+            return result.rows;
+        }   
+    });     
+}
+
+exports.theComment = (article_id, username, comment) => { 
+    let query = ` 
+        INSERT INTO comments
+        (article_id, author, body)
+        VALUES ($1, $2, $3) RETURNING author AS username, body;
     `;
 
-    return db.query(query, [article_id])
-    .then((result) => {  
-        //if id is not in db reject the request    
-        if(article_id > articlesCount[0]) {
-            return Promise.reject({status: 404, msg: "no articles found!"});
+    return db.query(query, [article_id, username, comment])
+    .then((result) => {
+        //when body only contains white spaces 
+        if(comment.length >= 0 && !comment.match(/\w/gi))
+        {
+            return Promise.reject({ status: 400, msg: "can not post a comment with only white spaces"});
         }
-        return result.rows;
-    });
-    
+
+        return result.rows[0];
+    })
+
 }
+
+
