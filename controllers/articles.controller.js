@@ -31,3 +31,4 @@ exports.getArticles = (req, res, next) => {
         res.send(data);
     })
 }
+

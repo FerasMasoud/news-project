@@ -1,8 +1,6 @@
 const db = require('../db/connection');
 
-
-exports.selectArticleById = (article_id) => {
-    
+exports.selectArticleById = (article_id) => {   
     let newQuery = `
     SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.body, 
     articles.created_at, articles.votes, COUNT(comments.article_id) AS comment_count
@@ -53,10 +51,9 @@ exports.selectArticles = () => {
     let query = `
         SELECT articles.author, articles.title, articles.article_id, articles.topic, 
         articles.created_at, articles.votes, COUNT(comments.article_id) AS comment_count
-
         FROM articles
 
-        JOIN comments 
+        LEFT JOIN comments 
         ON articles.article_id = comments.article_id
 
         GROUP BY articles.author, articles.title, articles.article_id, articles.topic,

@@ -1,3 +1,4 @@
+const { idleTimeoutMillis } = require('pg/lib/defaults');
 const request = require('supertest');
 const app = require('../app');
 const db = require('../db/connection');
@@ -26,7 +27,7 @@ describe('GET /api/articles/:article_id', () => {
             });
         });
     });
-    test('REFACTORED: return an article object by id and + comment_count ', () => {
+    test('return an article object by id and + comment_count ', () => {
         return request(app)
         .get('/api/articles/5')
         .expect(200)
@@ -130,7 +131,95 @@ describe('GET /api/articles', () => {
             }); 
         });
     })
+    //add test wrong endpoin
+    test('return 404 when endpoint is not correct' , () => {
+        return request(app)
+        .get('/api/arltsd')
+        .expect(404)
+        .then((result) => {
+            expect(result.body.msg).toBe('path not found!!')
+        })
+    })
 })
+
+describe('GET /api/users', () => { 
+    test('return an array of users each having username property', () => {
+        return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then((result) => {
+            expect(result.body).toBeInstanceOf(Array);
+            result.body.forEach((element) => {
+                expect(element).toEqual({
+                    username: expect.any(String)
+                });
+            });
+        });
+    })
+    test('return 404 when endpoint is not correct' , () => {
+        return request(app)
+        .get('/api/usetasds')
+        .expect(404)
+        .then((result) => {
+            expect(result.body.msg).toBe('path not found!!')
+        })
+    })
+    
+})
+
+describe('GET /api/articles/:article_id/comments', () => {
+    test('return an array of comments of given article_id', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((result) => {
+            expect(result.body).toBeInstanceOf(Array);
+            result.body.forEach((element) => {
+                expect(element).toEqual({
+                    article_id: 1,
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String)
+                });
+            });
+        });
+    })
+    test("return 404 when article doesn't exist", () => {
+        return request(app)
+        .get('/api/articles/999/comments')
+        .expect(404)
+        .then((result) => {
+            expect(result.body.msg).toBe('no comments found!');
+        })
+    })
+})
+
+describe('POST /api/articles/:article_id/comments', () => {
+    test('post a comment into specific article', () => {
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send({ username: 'butter_bridge', body: 'test comment' })
+        .expect(201)
+        .then((result) => {
+            expect(result.body).toMatchObject({
+                username: 'butter_bridge', body: 'test comment'
+            });
+        })
+    })
+    test('return 400 when the comment only has white spaces', () => {
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send({ username: 'rogersop', body: ' '})
+        .expect(400)
+        .then((result) => {
+            expect(result.body.msg).toBe("can not post a comment with only white spaces");
+        })
+    })
+
+})
+
 
 
 
