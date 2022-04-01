@@ -1,7 +1,6 @@
 //import from comments model
 
-const { selectArticles } = require("../models/articles.model");
-const { selectCommentsFromArticle, theComment } = require("../models/comments.model")
+const { selectCommentsFromArticle, theComment, deleteCommentById } = require("../models/comments.model")
 
 exports.getCommentsFromArticle = (req, res, next) => {
     
@@ -22,6 +21,17 @@ exports.postComment = (req, res, next) => {
     .then((data) => {
         // we might need to parse data
         res.status(201).send(data);
+    })
+    .catch(next);
+}
+
+exports.deleteComment = (req, res, next) => {
+    // params
+    // body
+    const { comment_id } = req.params;
+    deleteCommentById(comment_id)
+    .then(() => {
+        res.status(204).send({});
     })
     .catch(next);
 }

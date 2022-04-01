@@ -26,9 +26,11 @@ exports.patchArticle = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    selectArticles()
+    const { sort_by, order, topic } = req.query;
+    selectArticles(sort_by, order, topic)
     .then((data) => {
         res.send(data);
-    })
+    }) 
+    .catch(next);
 }
 
