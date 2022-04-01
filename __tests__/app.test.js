@@ -265,6 +265,22 @@ describe('POST /api/articles/:article_id/comments', () => {
 
 })
 
+describe('DELETE /api/comments/:comment_id', () => { 
+    test('delete comment by ID', () => {
+        return request(app)
+        .delete('/api/comments/1')
+        .expect(204);
+    })
+    test('return 400 when comment does not exist', () => {
+        return request(app)
+        .delete('/api/comments/fsd')
+        .expect(400)
+        .then((result) => {
+            expect(result.body.msg).toBe('bad request!');
+        })
+    })
+})
+
 
 
 

@@ -42,10 +42,22 @@ exports.theComment = (article_id, username, comment) => {
         {
             return Promise.reject({ status: 400, msg: "can not post a comment with only white spaces"});
         }
-
         return result.rows[0];
     })
 
+}
+
+exports.deleteCommentById = (comment_id) => {
+
+    let query = ` 
+        DELETE FROM comments
+        WHERE comment_id = $1
+    `
+
+    return db.query(query, [comment_id])
+    .then((result) => {
+        return result.rows;
+    })
 }
 
 
