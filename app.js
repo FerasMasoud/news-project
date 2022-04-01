@@ -5,7 +5,6 @@ const { getUsers } = require('./controllers/users.controller');
 const { getCommentsFromArticle, postComment, deleteComment } = require('./controllers/comments.controller');
 
 
-
 const app = express();
 app.use(express.json());
 

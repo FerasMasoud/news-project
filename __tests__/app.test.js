@@ -4,6 +4,8 @@ const app = require('../app');
 const db = require('../db/connection');
 const testData = require('../db/data/test-data');
 const seed = require('../db/seeds/seed');
+//const endpointJSON = require('../endpoints.json');
+
 
 afterAll(() => db.end());
 beforeEach(() => seed(testData));
@@ -281,6 +283,16 @@ describe('DELETE /api/comments/:comment_id', () => {
     })
 })
 
+xdescribe('GET /api', () => {
+    test(' endpoint JSON to return all the endpoints avaialable', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then((result) => {
+            expect(result.body).toEqual(endpointJSON);
+        })
+    })
+})
 
 
 
