@@ -12,8 +12,8 @@
   "GET /api/articles": {
     "description": "serves an array of all topics",
     "queries": ["sort_by", "order", "topic"],
+    "DefaultedTo" :"sort by creation date in descending order",
     "exampleResponse": {
-      "DefaultedTo" :"sort by creation date in descending order",
       "articles": [
         {
           "author": "icellusedkars",
@@ -76,22 +76,48 @@
     "description": "serves an array of all users",
     "queries": [],
     "exampleResponse": {
-      "users": [{ "username": "testuser1"}, { "username": "testuser1"}]
+      "users": [{ "username": "user1"}, { "username": "user2"}]
     }
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "serves an array of all comments specific article",
+    "description": "serves an array of all comments of specific article",
     "exampleResponse": {
-      "article":
+      "all comment of article 3":
+      [
         {
-          "author": "rogersop",
-          "title": "UNCOVERED: catspiracy to bring down democracy",
-          "article_id": 5,
-          "body": "Bastet walks amongst us, and the cats are taking arms!",
-          "topic": "cats",
-          "created_at": "2020-08-03T13:14:00.000Z",
-          "votes": 0 
+          "comment_id": 10,
+          "body": "git push origin master",
+          "article_id": 3,
+          "author": "icellusedkars",
+          "votes": 0,    
+          "created_at": "2020-06-20T07:24:00.000Z"
+        },
+        {
+          "comment_id": 11,
+          "body": "Ambidextrous marsupial",
+          "article_id": 3,
+          "author": "icellusedkars",
+          "votes": 0,    
+          "created_at": "2020-09-19T23:10:00.000Z"
         }
+      ]      
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment to any chosen article",
+    "exampleResponse": {
+      "post comment to article 1":
+        {
+          "username": "testuser",
+          "body": "this is a test comment"
+        }     
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment by id",
+    "exampleResponse": {
+      "delete from comments comment 1":
+        {}     
+      }
   }
 }
