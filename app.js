@@ -3,11 +3,14 @@ const { getTopics } = require('./controllers/topics.controller');
 const { getArticleById, patchArticle, getArticles } = require('./controllers/articles.controller');
 const { getUsers } = require('./controllers/users.controller');
 const { getCommentsFromArticle, postComment, deleteComment } = require('./controllers/comments.controller');
-
-
+const endpointJSON = require('./endpoints.json');
 
 const app = express();
 app.use(express.json());
+
+app.get('/api', (req, res) => {
+    res.send(endpointJSON);
+});
 
 app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticleById);
@@ -17,6 +20,7 @@ app.get('/api/users', getUsers);
 app.get('/api/articles/:article_id/comments', getCommentsFromArticle );
 app.post('/api/articles/:article_id/comments', postComment);
 app.delete('/api/comments/:comment_id', deleteComment);
+
 
 //psql errors
 app.use((err, req, res, next) => {

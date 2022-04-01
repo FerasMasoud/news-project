@@ -1,9 +1,10 @@
-const { idleTimeoutMillis } = require('pg/lib/defaults');
 const request = require('supertest');
 const app = require('../app');
 const db = require('../db/connection');
 const testData = require('../db/data/test-data');
 const seed = require('../db/seeds/seed');
+const endpointJSON = require('../endpoints.json');
+
 
 afterAll(() => db.end());
 beforeEach(() => seed(testData));
@@ -112,7 +113,7 @@ describe('PATCH  /api/articles/:article_id', () => {
 })
 
 describe('GET /api/articles', () => { 
-    test('return an articles array of article objects with custom columns', () => {
+    test('return an articles array of article objects with custom columns and sorted by date in descending order', () => {
         return request(app)
         .get('/api/articles?sort_by=created_at')
         .expect(200)
@@ -215,18 +216,18 @@ describe('GET /api/users', () => {
 describe('GET /api/articles/:article_id/comments', () => {
     test('return an array of comments of given article_id', () => {
         return request(app)
-        .get('/api/articles/1/comments')
+        .get('/api/articles/3/comments')
         .expect(200)
         .then((result) => {
             expect(result.body).toBeInstanceOf(Array);
             result.body.forEach((element) => {
                 expect(element).toEqual({
-                    article_id: 1,
                     comment_id: expect.any(Number),
+                    body: expect.any(String),
+                    article_id: 3,
+                    author: expect.any(String),
                     votes: expect.any(Number),
                     created_at: expect.any(String),
-                    author: expect.any(String),
-                    body: expect.any(String)
                 });
             });
         });
@@ -269,7 +270,8 @@ describe('DELETE /api/comments/:comment_id', () => {
     test('delete comment by ID', () => {
         return request(app)
         .delete('/api/comments/1')
-        .expect(204);
+        .expect(204)
+        .expect({});
     })
     test('return 400 when comment does not exist', () => {
         return request(app)
@@ -279,8 +281,26 @@ describe('DELETE /api/comments/:comment_id', () => {
             expect(result.body.msg).toBe('bad request!');
         })
     })
+    test('return 404 when id is valid but does not exist', () => {
+        return request(app)
+        .delete('/api/comments/999')
+        .expect(404)
+        .then((result) => {
+            expect(result.body.msg).toBe('id not found!');
+        })
+    })
 })
 
+describe('GET /api', () => {
+    test(' endpoint JSON to return all the endpoints avaialable', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then((result) => {
+            expect(result.body).toEqual(endpointJSON);
+        })
+    })
+})
 
 
 

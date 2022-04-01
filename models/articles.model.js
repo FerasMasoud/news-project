@@ -48,7 +48,8 @@ exports.updateArticle = (article_id, newVote) => {
 )}
 
 exports.selectArticles = (sort_by='created_at', order='desc', topic) => {
-    const valid_sortBy = ['created_at'];
+    const valid_sortBy = ['author', 'created_at', 'title', 'article_id', 'body', 'topic', 'votes'];
+    const existing_culomns = [];
     const valid_sortOrder = ['asc', 'desc'];
     const valid_filterTopics = [ 'cats', 'mitch', 'paper'];
     const topicValue = [];
